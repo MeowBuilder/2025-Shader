@@ -14,6 +14,5 @@ void main()
 	newPosition.z = 0;
 	newPosition.w= 1;
 	gl_Position = newPosition;
-
 	v_Color = a_Color;
 }

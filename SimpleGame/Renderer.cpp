@@ -48,8 +48,7 @@ void Renderer::CreateVertexBufferObjects()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
 
 	//lecture2
-	float tri_Pos[]
-		=
+	float tri_Pos[] =
 	{
 		0.f, 0.f, 0.f,
 		1.f, 0.f, 0.f,
@@ -60,8 +59,7 @@ void Renderer::CreateVertexBufferObjects()
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTestPos);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(tri_Pos), tri_Pos, GL_STATIC_DRAW); //이때 VRAM에 메모리가 잡히고 업로드가 진행됨
 
-	float tri_Color[]
-		=
+	float tri_Color[] =
 	{
 		1.f, 0.f, 0.f, 1.f,
 		0.f, 1.f, 0.f, 1.f,

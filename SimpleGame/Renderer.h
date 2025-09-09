@@ -36,5 +36,6 @@ private:
 	//lecture2
 	GLuint m_VBOTestPos = 0;
 	GLuint m_VBOTestColor = 0;
+
 };
 
