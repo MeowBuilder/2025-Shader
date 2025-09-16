@@ -19,6 +19,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 
 	//Load shaders
 	m_SolidRectShader = CompileShaders("./Shaders/SolidRect.vs", "./Shaders/SolidRect.fs");
+	m_TestShader = CompileShaders("./Shaders/Test.vs", "./Shaders/Test.fs");
 	
 	//Create VBOs
 	CreateVertexBufferObjects();
@@ -47,28 +48,39 @@ void Renderer::CreateVertexBufferObjects()
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
 
-	//lecture2
-	float tri_Pos[] =
+	float temp = 0.5f;
+	float size = 0.1;
+
+	//lecture2, 3
+	float testPos[] =
 	{
-		0.f, 0.f, 0.f,
-		1.f, 0.f, 0.f,
-		1.f, 1.f, 0.f, //Triangle1
+		(0.f - temp) * size, (0.f - temp) * size, 0.f,
+		(1.f - temp) * size, (0.f - temp) * size, 0.f,
+		(1.f - temp) * size, (1.f - temp) * size, 0.f, //Triangle1
+
+		(0.f - temp) * size, (0.f - temp) * size, 0.f,
+		(1.f - temp) * size, (1.f - temp) * size, 0.f,
+		(0.f - temp) * size, (1.f - temp) * size, 0.f, //Triangle2
 	};
 
 	glGenBuffers(1, &m_VBOTestPos);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTestPos);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(tri_Pos), tri_Pos, GL_STATIC_DRAW); //이때 VRAM에 메모리가 잡히고 업로드가 진행됨
+	glBufferData(GL_ARRAY_BUFFER, sizeof(testPos), testPos, GL_STATIC_DRAW); //이때 VRAM에 메모리가 잡히고 업로드가 진행됨
 
-	float tri_Color[] =
+	float testColor[] =
 	{
-		1.f, 0.f, 0.f, 1.f,
-		0.f, 1.f, 0.f, 1.f,
-		0.f, 0.f, 1.f, 1.f
+		1.f, 1.f, 1.f, 1.f,
+		1.f, 1.f, 1.f, 1.f,
+		1.f, 1.f, 1.f, 1.f, //Triangle1
+
+		0.f, 0.f, 0.f, 1.f,
+		0.f, 0.f, 0.f, 1.f, //Triangle1
+		0.f, 0.f, 0.f, 1.f,
 	};
 
 	glGenBuffers(1, &m_VBOTestColor);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTestColor);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(tri_Color), tri_Color, GL_STATIC_DRAW); //이때 VRAM에 메모리가 잡히고 업로드가 진행됨
+	glBufferData(GL_ARRAY_BUFFER, sizeof(testColor), testColor, GL_STATIC_DRAW); //이때 VRAM에 메모리가 잡히고 업로드가 진행됨
 }
 
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
@@ -215,21 +227,20 @@ void Renderer::DrawSolidRect(float x, float y, float z, float size, float r, flo
 void Renderer::DrawTest()
 {
 	//Program select
-	glUseProgram(m_SolidRectShader);
-	glUniform4f(glGetUniformLocation(m_SolidRectShader, "u_Trans"), 0, 0, 0, 1);
-	glUniform4f(glGetUniformLocation(m_SolidRectShader, "u_Color"), 1, 1, 1, 1);
+	glUseProgram(m_TestShader);
 
-	int a_Position = glGetAttribLocation(m_SolidRectShader, "a_Position");
+	int a_Position = glGetAttribLocation(m_TestShader, "a_Position");
+	int a_Color = glGetAttribLocation(m_TestShader, "a_Color");
+
 	glEnableVertexAttribArray(a_Position);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTestPos);
 	glVertexAttribPointer(a_Position, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
 
-	int a_Color = glGetAttribLocation(m_SolidRectShader, "a_Color");
 	glEnableVertexAttribArray(a_Color);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTestColor);
 	glVertexAttribPointer(a_Color, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4, 0);
 
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDisableVertexAttribArray(a_Position);
 	glDisableVertexAttribArray(a_Color);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
