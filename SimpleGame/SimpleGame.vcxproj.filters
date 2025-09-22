@@ -52,5 +52,11 @@
     <None Include="Shaders\Test.vs">
       <Filter>소스 파일\Shaders</Filter>
     </None>
+    <None Include="Shaders\particle.fs">
+      <Filter>소스 파일\Shaders</Filter>
+    </None>
+    <None Include="Shaders\particle.vs">
+      <Filter>소스 파일\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

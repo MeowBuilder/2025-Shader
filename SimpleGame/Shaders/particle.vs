@@ -12,9 +12,11 @@ const float c_PI = 3.141592;
 
 void main()
 {
-	float rad = (fract(u_Time*a_Radius)*2)*c_PI;
+	float value = fract(u_Time)*2 - 1;
+	float rad = (value + 1)*c_PI;
 	float y = sin(rad)*a_Radius;
 	float x = cos(rad)*a_Radius;
+
 	
 	vec4 newPosition = vec4(a_Position,1);
 	newPosition.xy = newPosition.xy + vec2(x,y);
