@@ -30,7 +30,8 @@ void RenderScene(void)
 
 	// Renderer Test
 	//g_Renderer->DrawSolidRect(0, 0, 0, 40, 0, 0, 1, 1);
-	g_Renderer->DrawParticle();
+	//g_Renderer->DrawParticle();
+	g_Renderer->DrawGridMesh();
 
 	glutSwapBuffers();
 }
@@ -67,7 +68,7 @@ int main(int argc, char **argv)
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(0, 0);
-	glutInitWindowSize(500, 500);
+	glutInitWindowSize(800, 800);
 	glutCreateWindow("Game Software Engineering KPU");
 
 	glewInit();

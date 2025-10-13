@@ -103,8 +103,8 @@ void circleParticle()
 
 		//float x = sin(2 * a_Value * c_PI);
 		//float y = cos(2 * a_Value * c_PI);
-		float x = cos(2 * a_Value * c_PI) * fract(u_Time);
-		float y = sin(2 * a_Value * c_PI) * fract(u_Time);
+		float x = cos(2 * a_Value * c_PI) * sin(newTime);
+		float y = sin(2 * a_Value * c_PI) * sin(newTime);
 
 		
 		float newX = x + 0.5 * c_Gravity.x * tt;
