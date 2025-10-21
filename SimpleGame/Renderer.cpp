@@ -24,10 +24,23 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	CreateVertexBufferObjects();
 
 	//Create Grid Mesh
-	CreateGridMesh(100, 100);
+	CreateGridMesh(1000, 1000);
 
 	//Create Particles
 	GenerateParticles(10000);
+
+	//Fill Points
+	int index = 0;
+	for (int i = 0; i < 100; i++) {
+		float x = 2 * ((float)rand() / (float)RAND_MAX) - 1.f;
+		float y = 2 * ((float)rand() / (float)RAND_MAX) - 1.f;
+		float st = 10 * ((float)rand() / (float)RAND_MAX);
+		float lt = ((float)rand() / (float)RAND_MAX);
+		m_Points[index] = x; index++;
+		m_Points[index] = y; index++;
+		m_Points[index] = st; index++;
+		m_Points[index] = lt; index++;
+	}
 
 	if (m_SolidRectShader > 0 && m_VBORect > 0)
 	{
@@ -380,12 +393,15 @@ void Renderer::DrawGridMesh()
 {
 	m_time += 0.016;
 
-	int shader = m_GridMeshShader;
 	//Program select
+	int shader = m_GridMeshShader;
 	glUseProgram(shader);
 
 	int uTimeLoc = glGetUniformLocation(shader, "u_Time");
 	glUniform1f(uTimeLoc, m_time);
+
+	int uPointsLoc = glGetUniformLocation(shader, "u_Points");
+	glUniform4fv(uPointsLoc, 100, m_Points);
 
 	int a_PositionLoc = glGetAttribLocation(shader, "a_Position");
 	glEnableVertexAttribArray(a_PositionLoc);
@@ -583,10 +599,10 @@ void Renderer::GenerateParticles(int numParticle)
 
 void Renderer::CreateGridMesh(int x, int y)
 {
-	float basePosX = -0.5f;
-	float basePosY = -0.5f;
-	float targetPosX = 0.5f;
-	float targetPosY = 0.5f;
+	float basePosX = -1.0f;
+	float basePosY = -1.0f;
+	float targetPosX = 1.0f;
+	float targetPosY = 1.0f;
 
 	int pointCountX = x;
 	int pointCountY = y;
