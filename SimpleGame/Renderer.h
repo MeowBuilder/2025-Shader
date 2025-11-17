@@ -22,6 +22,8 @@ public:
 	void DrawGridMesh();
 	void DrawFullScreenColor(float r, float g, float b, float a);
 
+	void DrawFS();
+
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
 	void CompileAllShaderPrograms();
@@ -67,5 +69,9 @@ private:
 
 	//For raindrop effect
 	float m_Points[100 * 4];
+
+	//For Fragmnt Shader factory
+	GLuint m_VBOFS = 0;
+	GLuint m_FSShader = 0;
 };
 

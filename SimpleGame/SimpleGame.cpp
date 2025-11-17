@@ -32,7 +32,8 @@ void RenderScene(void)
 	// Renderer Test
 	//g_Renderer->DrawSolidRect(0, 0, 0, 40, 0, 0, 1, 1);
 	//g_Renderer->DrawParticle();
-	g_Renderer->DrawGridMesh();
+	//g_Renderer->DrawGridMesh();
+	g_Renderer->DrawFS();
 
 	glutSwapBuffers();
 }
@@ -65,8 +66,8 @@ void SpecialKeyInput(int key, int x, int y)
 
 int main(int argc, char **argv)
 {
-	int winX = 1000;
-	int winY = 1000;
+	int winX = 800;
+	int winY = 800;
 	// Initialize GL things
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
