@@ -11,22 +11,25 @@ uniform vec4 u_Points[MAX_POINTS];
 
 const float c_PI = 3.141592;
 
+out vec2 v_UV;
+
 void Flag(){
 	vec4 newPosition = vec4(a_Position,1);
 
 	float value = a_Position.x + 0.5;
 
-	newPosition.y = newPosition.y * (1-value);
+	//newPosition.y = newPosition.y * (1-value);
 
 	float dX = 0;
-	float dY = sin(2 * value * c_PI - u_Time * 4) * 0.7 * value;
-	float newColor = (sin(2 * value * c_PI - u_Time * 4)+1)/2;
+	float dY = sin(2 * value * c_PI - u_Time * 10) * 0.7 * value;
+	float newColor = (sin(2 * value * c_PI - u_Time * 10)+1)/2;
 
 	newPosition += vec4(dX,dY,0,0);
 
 	gl_Position = newPosition;
 
 	v_Color = vec4(newColor);
+	v_UV = vec2(a_Position.x + 0.5, 0.5 - a_Position.y);
 }
 
 void Wave(){
@@ -86,9 +89,9 @@ void RainDrop(){
 
 void main()
 {
-	//Flag();
+	Flag();
 	//Wave();
-	RainDrop();
+	//RainDrop();
 }
 
 

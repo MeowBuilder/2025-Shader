@@ -4,23 +4,20 @@ layout(location=0) out vec4 FragColor;
 
 in vec2 v_UV;
 
+uniform sampler2D u_RGBTexture;
+
 uniform float u_Time;
 
 const float c_PI = 3.141592;
 
 void main()
 {
-	vec4 newColor = vec4(0);
+	vec2 newUV = v_UV;
+	float dx = sin(v_UV.y * 2 * c_PI * 4 + u_Time) * 0.1;
+	float dy = sin(v_UV.x * 2 * c_PI * 4 + u_Time) * 0.2;
 
-	float xValue = pow(abs(sin(v_UV.x*c_PI*2 * 1.5)),256);
-	float yValue = pow(abs(cos(v_UV.y*c_PI*2 * 4)),12);
+	newUV += vec2(dx,dy);
 
-	newColor = vec4(xValue);
-	newColor -= vec4(yValue);
-
-	if (v_UV.x > 0.4 && v_UV.x < 0.6){
-		newColor.b = 0;
-	}
-
-	FragColor = vec4(newColor);
+	vec4 sampledClor = texture(u_RGBTexture, newUV);
+	FragColor = sampledClor;
 }
