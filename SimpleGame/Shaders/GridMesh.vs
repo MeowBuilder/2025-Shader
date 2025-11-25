@@ -18,7 +18,7 @@ void Flag(){
 
 	float value = a_Position.x + 0.5;
 
-	//newPosition.y = newPosition.y * (1-value);
+	newPosition.y = newPosition.y * (1-value);
 
 	float dX = 0;
 	float dY = sin(2 * value * c_PI - u_Time * 10) * 0.7 * value;
@@ -93,17 +93,3 @@ void main()
 	//Wave();
 	//RainDrop();
 }
-
-
-
-
-/*if(d < 0.5){
-	newColor = 1;
-}
-else
-{
-	newColor = 0;
-}*/
-
-/*float value = 0.5 - d;
-newColor = ceil(value);*/

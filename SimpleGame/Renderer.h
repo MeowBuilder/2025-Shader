@@ -25,6 +25,10 @@ public:
 	void DrawFullScreenColor(float r, float g, float b, float a);
 
 	void DrawFS();
+	void DrawTexture(float x, float y, float sx, float sy, GLuint TexID);
+	void DrawDebugTextures();
+
+	void DrawFBOs();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -38,6 +42,7 @@ private:
 	void GenerateParticles(int numParticle);
 	void CreateGridMesh(int x, int y);
 	GLuint CreatePngTexture(char* filePath, GLuint samplingMethod);
+	void CreateFBOs();
 
 
 	bool m_Initialized = false;
@@ -92,5 +97,23 @@ private:
 	GLuint m_8Texture = 0;
 	GLuint m_9Texture = 0;
 	GLuint m_NUMTexture = 0;
+
+	//Texture
+	GLuint m_TexVBO = 0;
+	GLuint m_TexShader = 0;
+
+	//FBO Color Buffer
+	GLuint m_RT0 = 0;
+	GLuint m_RT1 = 0;
+	GLuint m_RT2 = 0;
+	GLuint m_RT3 = 0;
+	GLuint m_RT4 = 0;
+
+	//FBOs
+	GLuint m_FBO0 = 0;
+	GLuint m_FBO1 = 0;
+	GLuint m_FBO2 = 0;
+	GLuint m_FBO3 = 0;
+	GLuint m_FBO4 = 0;
 };
 
