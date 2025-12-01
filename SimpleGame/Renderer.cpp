@@ -93,8 +93,17 @@ GLuint Renderer::CreatePngTexture(char* filePath, GLuint samplingMethod)
 void Renderer::CreateFBOs()
 {
 	//Gen Color Buffer
-	glGenTextures(1, &m_RT0);
-	glBindTexture(GL_TEXTURE_2D, m_RT0);
+	glGenTextures(1, &m_RT0_0);
+	glBindTexture(GL_TEXTURE_2D, m_RT0_0);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 512, 512, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
+	glGenTextures(1, &m_RT0_1);
+	glBindTexture(GL_TEXTURE_2D, m_RT0_1);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -114,7 +123,8 @@ void Renderer::CreateFBOs()
 
 	//Attach to FBO
 	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_RT0, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_RT0_0, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, m_RT0_1, 0);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
 
 	//Check!!
@@ -125,8 +135,17 @@ void Renderer::CreateFBOs()
 	}
 
 	//Gen Color Buffer
-	glGenTextures(1, &m_RT1);
-	glBindTexture(GL_TEXTURE_2D, m_RT1);
+	glGenTextures(1, &m_RT1_0);
+	glBindTexture(GL_TEXTURE_2D, m_RT1_0);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 512, 512, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
+	glGenTextures(1, &m_RT1_1);
+	glBindTexture(GL_TEXTURE_2D, m_RT1_1);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -145,7 +164,8 @@ void Renderer::CreateFBOs()
 
 	//Attach to FBO
 	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO1);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_RT1, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_RT1_0, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, m_RT1_1, 0);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
 
 	//Check!!
@@ -569,12 +589,16 @@ void Renderer::DrawGridMesh()
 	int shader = m_GridMeshShader;
 	glUseProgram(shader);
 
+	GLenum DrawBuffers[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+	glDrawBuffers(2, DrawBuffers);
+
 	int uTimeLoc = glGetUniformLocation(shader, "u_Time");
 	glUniform1f(uTimeLoc, m_time);
 
 	int uTextureLoc = glGetUniformLocation(shader, "u_Texture");
 	glUniform1i(uTextureLoc, 0);
 
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_FlagTexture);
 
 	int uPointsLoc = glGetUniformLocation(shader, "u_Points");
@@ -627,6 +651,9 @@ void Renderer::DrawFS()
 
 	//Program select
 	glUseProgram(shader);
+
+	GLenum DrawBuffers[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+	glDrawBuffers(2, DrawBuffers);
 
 	int uTimeLoc = glGetUniformLocation(shader, "u_Time");
 	glUniform1f(uTimeLoc, m_time);
@@ -687,6 +714,8 @@ void Renderer::DrawTexture(float x, float y, float sx, float sy, GLuint TexID)
 {
 	int shader = m_TexShader;
 
+	m_time += 0.016;
+
 	//Program select
 	glUseProgram(shader);
 
@@ -698,6 +727,9 @@ void Renderer::DrawTexture(float x, float y, float sx, float sy, GLuint TexID)
 
 	int uTran = glGetUniformLocation(shader, "u_Tran");
 	glUniform2f(uTran, x, y);
+
+	int uTimeLoc = glGetUniformLocation(shader, "u_Time");
+	glUniform1f(uTimeLoc, m_time);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, TexID);
@@ -716,35 +748,23 @@ void Renderer::DrawTexture(float x, float y, float sx, float sy, GLuint TexID)
 
 void Renderer::DrawDebugTextures()
 {
-	DrawTexture(-0.8, -0.8, 0.2, 0.2, m_RT0);
-	DrawTexture(-0.4, -0.8, 0.2, 0.2, m_RT1);
-	DrawTexture(-0.0, -0.8, 0.2, 0.2, m_RT2);
+	DrawTexture(-0.5, -0.5, 0.5, 0.5, m_RT0_0);
+	DrawTexture(-0.5, 0.5, 0.5, 0.5, m_RT0_1);
 }
 
 void Renderer::DrawFBOs()
 {
 	//Set FBO
 	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO0);
+	glViewport(0, 0, 512, 512);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//Draw
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	DrawParticle();
-
-	//Set FBO
-	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO1);
-
-	//Draw
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	DrawGridMesh();
-
-	//Set FBO
-	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO2);
-
-	//Draw
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	DrawFS();
 
+
 	//Restore FBO
+	glViewport(0, 0, 512, 512);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 }

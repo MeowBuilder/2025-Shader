@@ -1,6 +1,7 @@
 ﻿#version 330
 
 layout(location=0) out vec4 FragColor;
+layout(location=1) out vec4 FragColor1;
 
 in vec2 v_UV;
 
@@ -13,7 +14,7 @@ uniform float u_Time;
 
 const float c_PI = 3.141592;
 
-void Test(){
+vec4 Test(){
 	vec2 newUV = v_UV;
 	float dx = sin(v_UV.y * 2 * c_PI * 4 + u_Time) * 0.1;
 	float dy = sin(v_UV.x * 2 * c_PI * 4 + u_Time) * 0.2;
@@ -21,22 +22,22 @@ void Test(){
 	newUV += vec2(dx,dy);
 
 	vec4 sampledClor = texture(u_RGBTexture, newUV);
-	FragColor = sampledClor;
+	return sampledClor;
 }
 
-void Circles(){
+vec4 Circles(){
 	vec2 newUV = v_UV;
 	vec2 center = vec2(0.5,0.5);
 	float d = distance(newUV,center);
 	vec4 newColor = vec4(0);
 
-	float value = sin(d * 4 * c_PI * 8 + u_Time * 16);
+	float value = sin(d * 4 * c_PI * 4 + u_Time * 8);
 	newColor = vec4(value);
 
-	FragColor = newColor;
+	return newColor;
 }
 
-void Flag()
+vec4 Flag()
 {
 	vec2 newUV = vec2(v_UV.x,1-v_UV.y - 0.5);
 	vec4 newColor = vec4(0);
@@ -56,37 +57,37 @@ void Flag()
 	//	discard;
 	//}
 
-	FragColor = newColor;
+	return newColor;
 }
 
-void Q1()
+vec4 Q1()
 {
 	vec2 newUV = vec2(v_UV.x, v_UV.y);
 	float x = newUV.x;
 	float y = 1 - abs(2 * (newUV.y - 0.5)); // newUV.y - 0.5 => -0.5 ~ 0.5 \ * 2 => -1 ~ 1 \ abs() => 1~0~1 \ 1- => 0~1~0
 	vec4 newColor = texture(u_RGBTexture, vec2(x,y));
-	FragColor = newColor;
+	return newColor;
 }
 
-void Q2(){
+vec4 Q2(){
 	vec2 newUV = vec2(v_UV.x, v_UV.y);
 	float x = fract(newUV.x * 3);
 	float y = (2 - floor(newUV.x * 3))/3 + (newUV.y / 3); 
 
 	vec4 newColor = texture(u_RGBTexture, vec2(x,y));
-	FragColor = newColor;
+	return newColor;
 }
 
-void Q3(){
+vec4 Q3(){
 	vec2 newUV = vec2(v_UV.x, v_UV.y);
 	float x = fract(newUV.x * 3);
 	float y = (floor(newUV.x * 3))/3 + (newUV.y / 3);
 
 	vec4 newColor = texture(u_RGBTexture, vec2(x,y));
-	FragColor = newColor;
+	return newColor;
 }
 
-void Brick_Horizontal(){
+vec4 Brick_Horizontal(){
 	vec2 newUV = vec2(v_UV.x, v_UV.y);
 
 	float rCount = 2;
@@ -97,16 +98,16 @@ void Brick_Horizontal(){
 	float y = fract(newUV.y * rCount);
 
 	vec4 newColor = texture(u_RGBTexture, vec2(x,y));
-	FragColor = newColor;
+	return newColor;
 }
 
-void Brick_Vertical(){
+vec4 Brick_Vertical(){
 	vec2 newUV = vec2(v_UV.x, v_UV.y);
 	float x = fract(newUV.x * 2);
 	float y = fract(newUV.y * 2) + floor(newUV.x*2) * 0.5;//(0.5 * (round(newUV.x)));
 
 	vec4 newColor = texture(u_RGBTexture, vec2(x,y));
-	FragColor = newColor;
+	return newColor;
 }
 
 float random (vec2 P) {
@@ -126,7 +127,7 @@ float fractalNoise(vec2 P, float T) {
     return n * 1.5;
 }
 
-void Brick_Horizontal_AI(){
+vec4 Brick_Horizontal_AI(){
     // 1. 벽돌 패턴 정의 상수
     const float BRICK_WIDTH = 4.0;
     const float BRICK_HEIGHT = 8.0;
@@ -189,14 +190,14 @@ void Brick_Horizontal_AI(){
     }
     
     // 6. 최종 색상 출력
-    FragColor = finalColor;
+    return finalColor;
 }
 
-void Digit(){
-    FragColor = texture(u_DigitTexture,v_UV);
+vec4 Digit(){
+    return texture(u_DigitTexture,v_UV);
 }
 
-void Digit_Num(){
+vec4 Digit_Num(){
     int selectedNUM = int(u_Time) % 10;
 
     int tileIndex = (selectedNUM + 9)%10;
@@ -207,7 +208,7 @@ void Digit_Num(){
 	float tx = (v_UV.x * 0.2) + offX;
 	float ty = (v_UV.y * 0.5) + offY;
 
-	FragColor = texture(u_NUMTexture, vec2(tx,ty));
+	return texture(u_NUMTexture, vec2(tx,ty));
 }
 
 // 격자무늬(Grid) 필터 함수
@@ -247,8 +248,7 @@ vec4 applyWaveFilter(vec4 color, vec2 local_uv) {
     return vec4(color.rgb * wave_tint, color.a);
 }
 
-
-void Digit_Five_Nums() {
+vec4 Digit_Five_Nums() {
     // 1. 현재 시간에서 5자리 숫자를 계산 (00000 ~ 99999)
     int currentNumber = int(u_Time * 100.0) % 100000;
     
@@ -336,7 +336,7 @@ void Digit_Five_Nums() {
     finalColor.rgb *= random_tint;
 
     // 8. 최종 출력
-    FragColor = finalColor;
+    return finalColor;
 }
 
 void main()
@@ -350,5 +350,8 @@ void main()
 	//Brick_Horizontal_AI();
     //Digit();
     //Digit_Num();
-    Digit_Five_Nums();
+    //Digit_Five_Nums();
+
+    FragColor = Circles();
+    FragColor1 = Flag();
 }

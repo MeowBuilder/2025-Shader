@@ -103,8 +103,10 @@ private:
 	GLuint m_TexShader = 0;
 
 	//FBO Color Buffer
-	GLuint m_RT0 = 0;
-	GLuint m_RT1 = 0;
+	GLuint m_RT0_0 = 0;
+	GLuint m_RT0_1 = 0;
+	GLuint m_RT1_0 = 0;
+	GLuint m_RT1_1 = 0;
 	GLuint m_RT2 = 0;
 	GLuint m_RT3 = 0;
 	GLuint m_RT4 = 0;

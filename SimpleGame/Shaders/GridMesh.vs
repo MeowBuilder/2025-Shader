@@ -21,8 +21,8 @@ void Flag(){
 	newPosition.y = newPosition.y * (1-value);
 
 	float dX = 0;
-	float dY = sin(2 * value * c_PI - u_Time * 10) * 0.7 * value;
-	float newColor = (sin(2 * value * c_PI - u_Time * 10)+1)/2;
+	float dY = sin(2 * value * c_PI - u_Time*10) * 0.5 * value;
+	float newColor = (sin(2 * value * c_PI - u_Time*10)+1)/2;
 
 	newPosition += vec4(dX,dY,0,0);
 
